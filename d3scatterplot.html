@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>d3 Scatterplot (Yankees Players Ages vs. Weight)</title>
+    <title>d3 Scatterplot (League-Wide Standings in Major League Baseball)</title>
     <style>
 
 
@@ -15,6 +15,7 @@
   <body>
 
 <h1> 2018 League-Wide Standings in Major League Baseball </h1>
+<t> The relationships between number of runs and wins are shown on the graph below. The size of each circle corresponds to a teams' GB, or 'games behind'.  </t>
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script>
@@ -36,7 +37,7 @@
           w : +d.w,
           gb : +d.gb,
         };
-        // these include the diffrent elements i'm focusing on: eg: runs, runs_diff and gb
+        // these include the diffrent elements i'm focusing on: eg: runs, w, and gb
       }).then(function(data) {
 
 
@@ -92,35 +93,15 @@
 
               	var yAxis = d3.axisLeft()
               								.scale(yScale);
+
               						 svg.append("g") .attr("class", "y-axis")
               							  .attr("transform", "translate(" + p + ",0)")
               						  	.call(yAxis);
 
 
          });
-         // LABELS
-      
-         function parseName(team) {
- 					var name = team.split(" ");
- 					return name[0].charAt(0) + name[1].charAt(0)
- 				}
 
-         var labels = svg.selectAll("text")
-           .data(data)
-           .enter()
-           .append("text")
 
-           .text(function(d) {
-             return parseName(d.team) + "-" + d.abbr;
-           })
-           .style("font-size", "15px");
-
-         labels.attr("x", function(d) {
-           return (d.team);
-         })
-         .attr("y", function(d) {
-           return h - (d.abbr);
-         });
 
 
        </script>

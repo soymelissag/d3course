@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>d3 Bar Chart (Yankees Players Ages)</title>
+		<title>d3 Bar Chart (NFL Players Touchdowns)</title>
 		<style>
 			rect {
 				fill: pink;
@@ -12,12 +12,13 @@
 
 			text {
 				font-family: sans-serif;
-				fill: black;
+				fill: blue;
 			}
 		</style>
 	</head>
 	<body>
-		<h1> 2018 National Football League rushing statistics </h1>
+		<h1> 2018 National Football League Touchdown Statistics </h1>
+		<t> The number of touchdowns are shown on the graph below. The first initials above each bar corresponds to the player name and the second initials correspond to the team names. </t>
 
 		<script src="js/d3.min.js"></script>
 		<script>
@@ -34,26 +35,24 @@
 
 				//This is where I append the svg!
 
-				var svg = d3.select("body").append("svg");
+				var svg = d3.select("body")
+				            .append("svg");
 
 
 
 				// Applying the width and height so the SVG can live its best life.
 
-				svg.attr("width", w)
-				   .attr("height", h);
+				svg.attr("width", w + p)
+           .attr("height", h );
 
 
 					 var yScale = d3.scaleLinear()
 													.domain([0, d3.max(data, function(d) { return d.TD })])
-												 .range([ 0 , 100 ]);
+												 .range([ 0 ,100 ]);
 
 
 
-				// selectAll rectangles ('rect') to create the elements the data
-				// will be bound to. Attach the data. Use the 'enter' method to
-				// bind a data item to a 'rect'. Append all the 'rect' elements to
-				// the svg.
+				//selecting the shape (rectangle) that the data will be bound to
 
 				svg.selectAll("rect")
 				   .data(data)
@@ -61,21 +60,8 @@
 					 .append("rect")
 
 
-					 // A continuation of the chain above -- we have separated it here
-					 // to explain the details in each 'attr' method below.
-
-					 // 'rect' requires four attributes: x, y, width and height.
-
-					 // For x, multiply the index by 32 -- 32 accounts for our width
-					 // of 30 (set below) and the 2-pixel gap between each bar.
-
-					 // For y, if only d.Age is used to position the bar, the chart
-					 // will be upside-down. To fix this, subtract d.Age from the
-					 // height of the svg.
-
-					 // The width is set to 30 (pixels), as specified in the exercise.
-
-					 // The height is each player's age, which is stored in d.Age.
+				// for a rect you need: x, y, width and height. since i'm looking at
+				//touchdowns (td) on the y axis, i apply it to the height and y scale
 
 					 .attr("x", function(d, i) {
 					   return (i * 32);
@@ -86,32 +72,18 @@
 
 					 .attr("width", 30)
 					 .attr("height", function(d) {
-						 return yScale(d.TD);
-					 });
+
+				   return yScale(d.TD);
 
 
 
-				// LABELS
+			});
 
-				// The 'parseName' function is used to craft part of our label.
 
-				// parseName expects a player name as an argument. In the data, the
-				// player's first and last name are separated by a space. Using the
-				// 'split' method, each part of the name is placed into an array:
 
-				// "John Smith" => ["John", "Smith"]
+				// Labels
 
-				// Use bracket notation to get the first, last names. Then use the
-        // 'charAt' method to return the first character of each string.
-
-				// "John" => "J"
-				// "Smith" => "S"
-
-				// Another option is to use bracket notation to get the first, last
-				// initial(s):
-
-				// name[0][0] => "John" => "J"
-				// name[1][0] => "Smith" => "S"
+				//An attempt to label with the players name
 
 				function parseName(player) {
 					var name = player.split(" ");
@@ -119,25 +91,13 @@
 				}
 
 
-				// selectAll text ('text') to create the elements the data
-				// will be bound to. Attach the data. Use the 'enter' method to
-				// bind a data item to a 'text'. Append all the 'text' elements to
-				// the svg.
+
 
 				var labels = svg.selectAll("text")
 					 .data(data)
 					 .enter()
 					 .append("text")
 
-					 // Again, a continuation of the chain above...
-
-					 // Use JavaScript to parse information from each player object.
-					 // The 'parseName' function returns the first and last initial of
-					 // the player. Add a dash and the player's position to create the
-					 // desired text label.
-
-					 // Use the 'style' method to adjust the font size of the text
-					 // to 8 pixels. (Your font size may vary.)
 
 					 .text(function(d) {
 						 return parseName(d.Player) + "-" + d.Pos;
