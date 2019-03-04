@@ -30,7 +30,7 @@
 		   </nav>
 		   <main>
 		</body>
-
+<body>
 
 		<title>d3 Bar Chart (NFL Players Touchdowns)</title>
 		<style>
@@ -49,7 +49,7 @@
 	<body>
 
 		<h1> 2018 National Football League Touchdown Statistics </h1>
-		<t> The number of touchdowns are shown on the graph below. The first initials above each bar corresponds to the player name and the second initials correspond to the team names. </t>
+		<t> The number of touchdowns are shown on the graph below. The first initials above each bar corresponds to the player name and the second initials correspond to the position names. </t>
 
 		<script src="js/d3.min.js"></script>
 		<script>
@@ -136,19 +136,11 @@
 					 .style("font-size", "8px");
 
 
-				// Finally, position the labels using x, y coordinates.
+				// Labels!
 
-				// For x, use the value previously used to position the bar itself.
-				// In this case, our bar is 30 pixels, plus a 2-pixel margin. This
-				// will put the text exactly at the left edge of the bar. We add 2
-				// to indent the text two pixels from the left edge.
+				// For x, this is the position.
 
-				// For y, use value previously used to position the bar itself. In
-				// this case, the top of each bar is the player age subtracted
-				// from the height of the svg. This will place the text's baseline
-				// (the bottom of our text) above the bar. Add 8 to move the
-				// text below the top edge of the bar. (This last value may change
-			  // depending on your font size.)
+				// For y,this is the position.
 
 				labels.attr("x", function(d, i) {
 					  return (i * 32) + 2;
