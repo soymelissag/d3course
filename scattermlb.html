@@ -32,7 +32,15 @@
 
 		<script src="js/d3.js"></script>
 		<script>
-		d3.csv("data/mlb-standings.csv").then(function(data) {
+		d3.csv("data/mlb-standings.csv",function(data) {
+
+			runs : +d.runs,
+			run_diff : +d.run_diff,
+			pct : +d.pct,
+		};
+
+	}).then(function(data) {
+
 
 			// Setting up variables for later use...
 		  // Width, height, padding

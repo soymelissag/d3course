@@ -1,151 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
     <title>d3 Scatterplot (Yankees Players Ages vs. Weight)</title>
     <style>
-      circle {
-        fill: rgb(0,48,135);
-      }
+
 
       text {
         font-family: sans-serif;
-        fill: white;
+        fill: black;
       }
     </style>
   </head>
   <body>
 
+<h1> 2018 League-Wide Standings in Major League Baseball </h1>
 
-    <script src="js/d3.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
     <script>
+    // a note that when trying d3.v3, the code did not work.
 
-      // Define width, height.
+      // This is where you define the width, height and padding!
 
-      var w = 1200;
-      var h = 800;
-
-
-      // IMPORT DATA
-
-      d3.csv("data/mlb-standings.csv").then(function(data) {
+      var w = 800;
+      var h = 600;
+      var p = 50
 
 
+      // Data Importation (not a word) goes here
 
-        // Select body and append the svg. Capturing this reference in the
-				// variable 'svg' so the reference can be re-used as the svg is
-				// modified.
+      d3.csv("data/mlb-standings.csv", function(d) {
+      	//refer to erin's note about converting string to number
+        return {
+          runs : +d.runs,
+          w : +d.w,
+          gb : +d.gb,
+        };
+        // these include the diffrent elements i'm focusing on: eg: runs, runs_diff and gb
+      }).then(function(data) {
+
+
+
+
 
         var svg = d3.select("body").append("svg");
 
 
-        // Apply the width and height to the svg.
+        // This is where you insert the width and height to the svg.
 
-        svg.attr("width", w)
-           .attr("height", h);
+        svg.attr("width", w + p)
+           .attr("height", h + p);
 
 
-       // selectAll circles ('circle') to create the elements the data
-       // will be bound to. Attach the data. Use the 'enter' method to
-       // bind a data item to a 'circle'. Append all the 'circle'
-       // elements to the svg.
+       //because this is a scatterplot, you need to create the circles that the data is bound to
 
-        svg.selectAll("circle")
+        var circles = svg.selectAll("circle")
            .data(data)
            .enter()
            .append("circle")
 
- 					 // A continuation of the chain above -- we have separated it
-           // here to explain the details in each 'attr' method below.
 
-           // 'circle' requires three attributes: cx, cy and r.
+           //mapping the max value
+            var xScale = d3.scaleLinear()
+                           .domain([0, d3.max(data, function(d) { return d.runs })])
+                           .range([p, 500]);
 
-           // For cx (the x coordinate of the circle's center), use the
-           // player's age with a multiplier of 19 (as specified in the
-           // instructions to separate the plots).
+            var yScale = d3.scaleLinear()
+                           .domain([0, d3.max(data, function(d) { return d.w })])
+                          .range([ h - p , p ]);
 
-           // For cy (the y coordinate of the circle's center), use the
-           // player's weight with a multiplier of 2 (as specified in
-           // the instructions).
+ 					 //attributes of a circle include: cx, cy, and radius
 
-           // The instructions didn't indicate any specific radius size,
-           // but there will need to be space to include a label. Your
-           // value may be different or need to be adjusted later.
-
-           .attr("cx", function(d) {
-             return d.runs * 19;
+           circles.attr("cx", function(d) {
+             return xScale(d.runs);
            })
            .attr("cy", function(d) {
-             return h - (d.run_diff * 2);
+             return yScale(d.w);
            })
-           .attr("r", 15);
+           .attr("r",function(d) {return d.gb});
+           circles.attr("fill","pink")
+                .style("opacity",.2)
+                .style("stroke", "blue")
+
+                var xAxis = d3.axisBottom()
+              						    .scale(xScale);
+
+              				   	svg.append("g") .attr("class", "x-axis")
+              							 .attr("transform", "translate(0," + (h - p) + ")")
+              						   .call(xAxis);
 
 
-
-        // LABELS
-
-        // The 'parseName' function is repurposed from b-d3-barchart
-        // exercise. Please refer to that solution for details on
-        // the functionality.
-
-        function parseName(player) {
-					var name = player.split(" ");
-					return name[0].charAt(0) + name[1].charAt(0)
-				}
+              	var yAxis = d3.axisLeft()
+              								.scale(yScale);
+              						 svg.append("g") .attr("class", "y-axis")
+              							  .attr("transform", "translate(" + p + ",0)")
+              						  	.call(yAxis);
 
 
-        // selectAll text ('text') to create the elements the data
-				// will be bound to. Attach the data. Use the 'enter' method to
-				// bind a data item to a 'text'. Append all the 'text' elements to
-				// the svg.
+         });
+         // LABELS
+      
+         function parseName(team) {
+ 					var name = team.split(" ");
+ 					return name[0].charAt(0) + name[1].charAt(0)
+ 				}
 
-        var labels = svg.selectAll("text")
-          .data(data)
-          .enter()
-          .append("text")
+         var labels = svg.selectAll("text")
+           .data(data)
+           .enter()
+           .append("text")
+
+           .text(function(d) {
+             return parseName(d.team) + "-" + d.abbr;
+           })
+           .style("font-size", "15px");
+
+         labels.attr("x", function(d) {
+           return (d.team);
+         })
+         .attr("y", function(d) {
+           return h - (d.abbr);
+         });
 
 
-          // Again, a continuation of the chain above...
-
-          // Use JavaScript to parse information from each player object.
-          // The 'parseName' function returns the first and last initial of
-          // the player. Add a dash and the player's position to create the
-          // desired text label.
-
-          // Use the 'style' method to adjust the font size of the text
-          // to 8 pixels. (Your font size may vary.)
-
-          .text(function(d) {
-            return parseName(d.Name) + "-" + d.Position;
-          })
-          .style("font-size", "8px");
-
-
-        // Finally, position the labels using x, y coordinates.
-
-				// For x, use the value previously used to position the circles.
-        // In this case, a player's age with a multiplier of 19.
-
-        // For y, use the value previously used to position the circles.
-        // In this case, a player's weight with a multiplier of 2.
-        // Because y is plotted from top to bottom, this value is then
-        // subtracted from the height of the svg.
-
-        // What about the added values added/subtracted the end of each
-        // return statement?
-
-        // Those were added after the text was initially plotted. That
-        // end value may vary based on your text size, circle radius.
-        // Tinker. See what works for you!
-
-        labels.attr("x", function(d) {
-          return (d.runs * 19) - 11;
-        })
-        .attr("y", function(d) {
-          return h - (d.run_diff * 2) + 3;
-        });
-
-      });
-    </script>
-  </body>
-</html>
+       </script>
+     </body>
+   </html>

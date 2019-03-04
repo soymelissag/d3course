@@ -5,7 +5,9 @@
 		<title>d3 Bar Chart (Yankees Players Ages)</title>
 		<style>
 			rect {
-				fill: rgb(150,150,150);
+				fill: pink;
+				opacity: 0.2;
+				stroke: blue;
 			}
 
 			text {
@@ -15,12 +17,14 @@
 		</style>
 	</head>
 	<body>
+		<h1> 2018 National Football League rushing statistics </h1>
 
 		<script src="js/d3.min.js"></script>
 		<script>
 			// Width and height!
-			var w = 5000;
-			var h = 350;
+			var w = 1000;
+			var h = 100;
+			var p = 40
 
 
 			// Importing the data! Here I am inserting the nfl rushing file. Buckle up, we in for a ride.
@@ -38,6 +42,11 @@
 
 				svg.attr("width", w)
 				   .attr("height", h);
+
+
+					 var yScale = d3.scaleLinear()
+													.domain([0, d3.max(data, function(d) { return d.TD })])
+												 .range([ 0 , 100 ]);
 
 
 
@@ -72,11 +81,12 @@
 					   return (i * 32);
 				   })
 				   .attr("y", function(d) {
-						 return h - d.Att;
+						 return h - d.TD;
 					 })
+
 					 .attr("width", 30)
 					 .attr("height", function(d) {
-						 return d.Att;
+						 return yScale(d.TD);
 					 });
 
 
@@ -153,7 +163,7 @@
 					  return (i * 32) + 2;
   				})
 				  .attr("y", function(d) {
-						return (h - d.Att) + 8;
+						return (h - d.TD) -2;
 					});
 			});
 		</script>
