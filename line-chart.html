@@ -40,7 +40,7 @@
 
 
       //This is where I create the svg
-        var svg = d3.select("body")
+        var svg = d3.select("main")
                     .append("svg")
                     .attr("width",w + p)
                    .attr("height",h + p);
@@ -200,21 +200,6 @@
                                           .attr("y", function(d) { return yScale(d.Close) - 7; });
 
 
-
-
-                  //lines
-
-                  svg.append("line")
-                          .attr("class","midline")
-                          .attr("stroke", "red")
-                          .attr("x1",p)
-                          .attr("x2",w)
-                          .attr("y1",yScale(d3.max(data,function(d) {
-                            return d.Close;
-                          })))
-                          .attr("y2",yScale(d3.max(data,function(d) {
-                            return d.Close;
-                          })));
 // This is where I list the Obama administration dates that are January 1 2009- January 1 2017 (Happier days)
 
                   var barack = new Date('January 1, 2009 00:00:00');
