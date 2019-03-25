@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	  <meta charset="UTF-8" />
+		<title>Line Chart</title>
+    <link href="css/style.css" rel="stylesheet" />
+</head>
+
+<body>
+
+    		  <header>
+    		    <!-- ADD YOUR NAME -->
+    		    <h1>Melissa Gutierrez: Exercise Portfolio</h1>
+    		  </header>
+
+    		  <div id="content">
+
+    		    <nav>
+    		      <ul>
+    		        <li><a href="index.html">Return to Main Page</a></li>
+</ul>
+</nav>
+<main>
+  <h2> Google Data </h2>
+
+  <p> Shown below are the closing stock numbers for Google from August 2004 to March 2019. Four dates corresponding to important events in the history of Google are identified. </p>
+
+</main>
+</div>
+    <script src="js/d3.min.js"></script>
+		<script>
+//calling the google specific csv file
+    d3.csv("data/google.csv").then(function(data) {
+      console.log(data);
+
+      var w = 800;
+      var	h = 700;
+      var p = 60;
+
+
+
+      //This is where I create the svg
+        var svg = d3.select("body")
+                    .append("svg")
+                    .attr("width",w + p)
+                   .attr("height",h + p);
+
+        // The time parser for date converter goes here
+        var timeParser = d3.timeParse("%Y-%m-%d");
+        data.forEach(function(d) {
+          d.Date = timeParser(d.Date);
+          d.Close = +d.Close;
+        });
+
+// X scale to call D.date
+        xScale = d3.scaleTime()
+          .domain([d3.min(data, function(d) {
+            return d.Date;
+          }), d3.max(data, function(d) {
+            return d.Date
+          })])
+          .range([p, w - p]);
+
+          var xAxis = d3.axisBottom()
+                     .scale(xScale);
+                    svg.append("g")
+                       .attr("class", "x-axis")
+                       .attr("transform", "translate(0," + (h - p) + ")")
+                       .call(xAxis);
+
+        //Y Axis to call D.Close
+
+        yScale = d3.scaleLinear()
+            .domain([d3.min(data, function(d) {
+              return d.Close;
+            }), d3.max(data, function(d) {
+              return d.Close
+            })])
+            	.range([ h - p , p ]);
+
+            var yAxis = d3.axisLeft()
+                          .scale(yScale);
+                        svg.append("g")
+                         .attr("class", "y-axis")
+                         .attr("transform", "translate(" + p + ",0)")
+                           .call(yAxis);
+
+
+// GOOGLE COLORS: Blue #4285F4; Red #DB4437; Yellow #F4B400; Green  #0F9D58;
+
+
+        //This is where you draw the line (lol)
+            var line = d3.line()
+                .x(function(d){ return xScale(d.Date) ; })
+                .y(function(d){ return yScale(d.Close) ; });
+
+        // Append here
+                svg.append("path")
+                  .datum(data)
+                  .attr("class","line")
+                  .attr("d",line);
+
+
+                  //IPO: August 2004
+                  svg.selectAll("dot.one")
+                       .data(data)
+                     .enter()
+                     .append("circle")
+                       .filter(function(d) { return d.Close == 50.85424 ;
+                       })
+                       .style("fill", "#DB4437")
+                       .attr("class", "one")                       // <== and this one
+                       .attr("r", 7)
+                       .attr("cx", function(d) { return xScale(d.Date) ; })
+                       .attr("cy", function(d) { return yScale(d.Close); });
+
+                       var augustlabel = svg.selectAll("text.august")
+                                           .data(data)
+                                           .enter()
+                                           .append("text")
+                                           .filter(function(d) { return d.Close == 50.85424  ;
+                                           })
+                                           .attr("class", "august")
+                                           .text("IPO")
+                                           .style("font-size", "12px");
+                             augustlabel.attr("x", function(d) { return xScale(d.Date) ; })
+                                             .attr("y", function(d) { return yScale(d.Close) - 10; });
+                  //October 2006
+                       svg.selectAll("dot.two")
+                            .data(data)
+                          .enter().append("circle")
+                            .filter(function(d) { return d.Close == 236.655777 ;
+                            })
+                            .style("fill", "#F4B400")
+                            .attr("class", "two")                       // <== and this one
+                            .attr("r", 7)
+                            .attr("cx", function(d) { return xScale(d.Date)  ; })
+                            .attr("cy", function(d) { return yScale(d.Close); });
+
+                            var octlabel = svg.selectAll("text.oct")
+                                                .data(data)
+                                                .enter()
+                                                .append("text")
+                                                .filter(function(d) { return d.Close == 236.655777 ;
+                                                })
+                                                .attr("class", "oct")
+                                                .text("Acquired YouTube")
+                                                .style("font-size", "12px");
+                                  octlabel.attr("x", function(d) { return xScale(d.Date) +2 ; })
+                                                  .attr("y", function(d) { return yScale(d.Close) - 15; });
+
+                  //Sept 2008
+                  svg.selectAll("dot.three")
+                       .data(data)
+                     .enter().append("circle")
+                       .filter(function(d) { return d.Close == 198.965912 ;
+                       })
+                       .style("fill", "#0F9D58")
+                       .attr("class", "three")                       // <== and this one
+                       .attr("r", 7)
+                       .attr("cx", function(d) { return xScale(d.Date)  ; })
+                       .attr("cy", function(d) { return yScale(d.Close); });
+
+                       var septlabel = svg.selectAll("text.sept")
+                                           .data(data)
+                                           .enter()
+                                           .append("text")
+                                           .filter(function(d) { return d.Close == 198.965912  ;
+                                           })
+                                           .attr("class", "aug")
+                                           .text("Android")
+                                           .style("font-size", "12px");
+                            septlabel.attr("x", function(d) { return xScale(d.Date) + 5 ; })
+                                             .attr("y", function(d) { return yScale(d.Close) - 7; });
+
+                  //Oct 2018
+
+                  svg.selectAll("dot.three")
+                       .data(data)
+                     .enter().append("circle")
+                       .filter(function(d) { return d.Close == 1076.77002;
+                       })
+                       .style("fill", "#4285F4")
+                       .attr("class", "three")                       // <== and this one
+                       .attr("r", 7)
+                       .attr("cx", function(d) { return xScale(d.Date)  ; })
+                       .attr("cy", function(d) { return yScale(d.Close); });
+
+
+                    var octoberlabel = svg.selectAll("text.october")
+                                        .data(data)
+                                        .enter()
+                                        .append("text")
+                                        .filter(function(d) { return d.Close == 1076.77002  ;
+                                        })
+                                        .attr("class", "october")
+                                        .text("New York Times exposé")
+                                        .style("font-size", "12px");
+                          octoberlabel.attr("x", function(d) { return xScale(d.Date) + 3 ; })
+                                          .attr("y", function(d) { return yScale(d.Close) - 7; });
+
+
+
+
+                  //lines
+
+                  svg.append("line")
+                          .attr("class","midline")
+                          .attr("stroke", "red")
+                          .attr("x1",p)
+                          .attr("x2",w)
+                          .attr("y1",yScale(d3.max(data,function(d) {
+                            return d.Close;
+                          })))
+                          .attr("y2",yScale(d3.max(data,function(d) {
+                            return d.Close;
+                          })));
+// This is where I list the Obama administration dates that are January 1 2009- January 1 2017 (Happier days)
+
+                  var barack = new Date('January 1, 2009 00:00:00');
+                  console.log(+barack);
+
+                  var barack2= new Date('January 1, 2017 00:00:00');
+// The styling elements
+                  svg.append("line")
+                          .attr("class","midline")
+                          .attr("stroke", "pink")
+                          .attr("opacity",.1)
+                          .attr("x1",xScale(+barack))
+                          .attr("x2",xScale(+barack))
+                          .attr("y1", p)
+                          .attr("y2", h-p);
+
+
+                          svg.append("line")
+                                  .attr("class","midline")
+                                  .attr("stroke", "pink")
+                                  .attr("opacity",.1)
+                                  .attr("x1",xScale(+barack2))
+                                  .attr("x2",xScale(+barack2))
+                                  .attr("y1", p)
+                                  .attr("y2", h-p);
+
+
+                        svg.append("rect")
+                          .attr("x", xScale(+barack))
+                          .attr("y", p + 200)
+                          .attr("width", 373)
+                          .attr("height", 100)
+                          .attr("fill-opacity", .5)
+                          .style("fill", "#4285F4")
+
+                          svg.append("text")
+                          .attr("x", xScale(+barack))
+                          .attr("y", p + 250)
+                          .text("The Obama Administration")
+                          .style("font-size", "12px", "fill", "blue");
+
+
+
+                    });
+                      </script>
+                    </body>
+                  </html>

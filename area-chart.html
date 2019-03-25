@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	  <meta charset="UTF-8" />
+		<title>Area Chart</title>
+    <link href="/Users/melissagutierrez/Documents/GitHub/d3course/css/style.css" rel="stylesheet" />
+</head>
+
+<body>
+
+    		  <header>
+    		    <!-- ADD YOUR NAME -->
+    		    <h1>Melissa Gutierrez: Exercise Portfolio</h1>
+    		  </header>
+
+    		  <div id="content">
+
+    		    <nav>
+    		      <ul>
+    		        <li><a href="index.html">Return to Main Page</a></li>
+</ul>
+</nav>
+<main>
+  <h2> Facebook Stock Data </h2>
+
+  <p> Shown below are the closing stock numbers for Facebook from May 2012 to March 2019. Four dates corresponding to important events in the history of Facebook are identified.</p>
+
+</main>
+</div>
+    <script src="js/d3.min.js"></script>
+		<script>
+//calling the google specific csv file
+    d3.csv("/Users/melissagutierrez/Documents/GitHub/d3course/data/FB.csv").then(function(data) {
+      console.log(data);
+
+      var w = 700;
+      var	h = 300;
+      var p = 50;
+
+
+
+      //This is where I create the svg
+        var svg = d3.select("main")
+                    .append("svg")
+                    .attr("width",w + p)
+                   .attr("height",h + p);
+
+        // The time parser for date converter goes here
+        var timeParser = d3.timeParse("%Y-%m-%d");
+        data.forEach(function(d) {
+          d.Date = timeParser(d.Date);
+          d.Close = +d.Close;
+        });
+
+// X scale to call D.date
+        xScale = d3.scaleTime()
+          .domain([d3.min(data, function(d) {
+            return d.Date;
+          }), d3.max(data, function(d) {
+            return d.Date
+          })])
+          .range([p, w - p]);
+
+    var xAxis = d3.axisBottom()
+                     .scale(xScale);
+                    svg.append("g")
+                       .attr("class", "x-axis")
+                       .attr("transform", "translate(0," + (h - p) + ")")
+                       .call(xAxis);
+
+        //Y Axis to call D.Close
+
+        yScale = d3.scaleLinear()
+            .domain([d3.min(data, function(d) {
+              return d.Close;
+            }), d3.max(data, function(d) {
+              return d.Close
+            })])
+            	.range([ h - p , p ]);
+
+            var yAxis = d3.axisLeft()
+                          .scale(yScale);
+                        svg.append("g")
+                         .attr("class", "y-axis")
+                         .attr("transform", "translate(" + p + ",0)")
+                           .call(yAxis);
+
+
+
+//This is where you create the difference between area  and line
+
+        var linearea = d3.area()
+          .x(function(d) { return xScale(d.Date); })
+          .y0(function(d) { return yScale.range()[0]; })
+          .y1(function(d) { return yScale(d.Close) });
+
+        svg.append("path")
+           .datum(data)
+           .attr("class", "linearea")
+           .attr("d", linearea);
+
+
+// Imporant Dates in Facebook History
+
+           var fb1 = new Date('May 1, 2012 00:00:00');
+           var fb2 = new Date('February 1, 2014 00:00:00');
+           var fb3 = new Date('April 1, 2018 00:00:00');
+           var fb4 = new Date('September 1, 2018 00:00:00');
+
+
+
+           svg.selectAll("dot")
+              .data(data)
+              .enter().append("circle")
+              .filter(function(d) {
+                  if (d.Date >= +fb1 && d.Date <= +fb1) {
+                    return d;
+                  }
+                 else if (d.Date >= +fb2 && d.Date <= +fb2) {
+                    return d;
+                  }
+                  else if (d.Date >= +fb3 && d.Date <= +fb3) {
+                     return d;
+                   }
+                   else if (d.Date >= +fb4 && d.Date <= +fb4) {
+                      return d;
+                    }
+                })
+
+              // use #3C5A99 for Facebook blue
+              .style("fill", "#3C5A99")
+              .attr("r", 2)
+              .attr("cx", function(d) { return xScale(d.Date)  ; })
+              .attr("cy", function(d) { return yScale(d.Close); });
+
+//labeling the FB highlights here
+
+                var maylabel = svg.selectAll("text.may")
+                                    .data(data)
+                                    .enter()
+                                    .append("text")
+                                    .filter(function(d) {
+                                      if (d.Date >= +fb1 && d.Date <= +fb1) {
+                                        return d;
+                                      }
+                                    })
+                                    .attr("class", "may")
+                                    .text("Initial Public Offering")
+                                    .style("font-size", "12px");
+                      maylabel.attr("x", function(d) { return xScale(d.Date) + 3 ; })
+                                      .attr("y", function(d) { return yScale(d.Close) - 7; });
+
+           var feblabel = svg.selectAll("text.feb")
+                                    .data(data)
+                                    .enter()
+                                    .append("text")
+                                    .filter(function(d) {
+                                      if (d.Date >= +fb2 && d.Date <= +fb2) {
+                                        return d;
+                                      }
+                                    })
+                                    .attr("class", "feb")
+                                    .text("Facebook Acquires WhatsApp")
+                                    .style("font-size", "12px");
+                      feblabel.attr("x", function(d) { return xScale(d.Date) + 3 ; })
+                                      .attr("y", function(d) { return yScale(d.Close) - 7; });
+
+           var aprilabel = svg.selectAll("text.apri")
+                                    .data(data)
+                                    .enter()
+                                    .append("text")
+                                    .filter(function(d) {
+                                      if (d.Date >= +fb3 && d.Date <= +fb3) {
+                                        return d;
+                                      }
+                                    })
+                                    .attr("class", "april")
+                                    .text("Facebook CEO Mark Zuckerberg Testifies Before Congres")
+                                    .style("font-size", "12px");
+                      aprilabel.attr("x", function(d) { return xScale(d.Date) + 3 ; })
+                                      .attr("y", function(d) { return yScale(d.Close) - 7; });
+
+           var septlabel = svg.selectAll("text.sept")
+                                    .data(data)
+                                    .enter()
+                                    .append("text")
+                                    .filter(function(d) {
+                                      if (d.Date >= +fb4 && d.Date <= +fb4) {
+                                        return d;
+                                      }
+                                    })
+                                    .attr("class", "sept")
+                                    .text("Facebook Discovers Data Breach")
+                                    .style("font-size", "12px");
+                      septlabel.attr("x", function(d) { return xScale(d.Date) + 3 ; })
+                                      .attr("y", function(d) { return yScale(d.Close) - 7; });
+
+
+        svg.append("linearea")
+           .attr("class","midline")
+           .attr("stroke", "black")
+           .attr("x1", p)
+           .attr("x2", w)
+           .attr("y1", yScale(d3.max(data,function(d) {
+             return d.Close;
+           })))
+           .attr("y2",yScale(d3.max(data,function(d) {
+             return d.Close;
+           })));
+// Add in Obama years as rectangular block
+                             var barack = new Date('May 1, 2012 00:00:00');
+                             console.log(+barack);
+
+                             var barack2= new Date('January 1, 2017 00:00:00');
+           // The styling elements
+                             svg.append("line")
+                                     .attr("class","midline")
+                                     .attr("stroke", "pink")
+                                     .attr("opacity",.9)
+                                     .attr("x1",xScale(+barack))
+                                     .attr("x2",xScale(+barack))
+                                     .attr("y1", p)
+                                     .attr("y2", h-p);
+
+
+                                     svg.append("line")
+                                             .attr("class","midline")
+                                             .attr("stroke", "pink")
+                                             .attr("opacity",.9)
+                                             .attr("x1",xScale(+barack2))
+                                             .attr("x2",xScale(+barack2))
+                                             .attr("y1", p)
+                                             .attr("y2", h-p);
+
+
+                                   svg.append("rect")
+                                     .attr("x", xScale(+barack))
+                                     .attr("y", p)
+                                     .attr("width", 410)
+                                     .attr("height", 40)
+                                     .attr("fill-opacity", .5)
+                                     .style("fill", "pink")
+
+                                     svg.append("text")
+                                     .attr("x", xScale(+barack))
+                                     .attr("y", p + 25)
+                                     .text("The Obama Administration")
+                                     .style("font-size", "12px", "fill", "blue", );
+
+
+
+                               });
+    </script>
+  </body>
+</html>

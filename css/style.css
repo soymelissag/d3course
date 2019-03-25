@@ -37,3 +37,21 @@ header h1 {
 nav {
   border: 1px solid #025fb4;;
 }
+.midline {
+  stroke: black;
+  stroke-width: 1px;
+    }
+
+.line {
+  fill: none;
+  stroke: #4285F4;
+  stroke-width: 1px;
+    }
+    
+.linearea {
+  fill: #346DF1;
+  opacity:.1;
+  stroke: #346DF1;
+  stroke-width: 1px;
+
+}
