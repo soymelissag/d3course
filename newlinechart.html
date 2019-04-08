@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	<meta charset="UTF-8" />
+  <title>Interactive Bar Chart</title>
+  <link href="css/style.css" rel="stylesheet"/>
+</head>
+
+<body>
+    		  <header>
+    		  <!-- ADD YOUR NAME -->
+    		  <h1>Melissa Gutierrez: Exercise Portfolio</h1>
+    		  </header>
+
+    		  <div id="content">
+
+    		  <nav>
+    		  <ul>
+    		  <li><a href="index.html">Return to Main Page</a></li>
+</ul>
+</nav>
+
+<main>
+  <img src="https://dtkp6g0samjql.cloudfront.net/uploads/photo/file/12583518/gallery_hero_il_fullxfull.1117468546_5lt4.jpg" width="125">
+
+<h2>Disney Closing Stock Prices (1997 - 2019)</h2>
+
+<p>The data shown below include closing stock prices for the Disney corportation between the dates of May 1, 1997 and March 1, 2019.</p>
+</main>
+</div>
+
+<script src="js/d3.min.js"></script>
+<script>
+
+/*Call in the Disney Excell data*/
+d3.csv("data/DIS.csv").then(function(data) {
+console.log(data);
+
+//Variables for height, width, and padding
+var w = 500;
+var h = 400;
+var p = 40;
+
+//Create svg
+var svg = d3.select("main")
+  .append("svg")
+  .attr("width", w + p)
+  .attr("height", h + p);
+
+//Convert to date obejct
+var timeParser = d3.timeParse("%Y-%m-%d");
+data.forEach(function(d) {
+  d.Date = timeParser(d.Date);
+
+  //Divides date for tooltip placement
+var bisectDate = d3.bisector(function(d) { return d.Date; }).left;
+
+  d.Close = +d.Close;
+  d.High = d.High;
+  d.Low = d.Low;
+});
+
+//Create x axis
+xScale = d3.scaleTime()
+  .domain([d3.min(data, function(d) {
+    return d.Date;
+  }), d3.max(data, function(d) {
+    return d.Date
+  })])
+  .range([p, w - p]);
+
+var xAxis = d3.axisBottom()
+  .scale(xScale);
+svg.append("g")
+  .attr("class", "x-axis")
+  .attr("transform", "translate(0," + (h - p) + ")")
+  .call(xAxis);
+
+//Y axis
+yScale = d3.scaleLinear()
+  .domain([d3.min(data, function(d) {
+    return d.Close;
+  }), d3.max(data, function(d) {
+    return d.Close
+  })])
+  .range([h - p, p]);
+
+var yAxis = d3.axisLeft()
+  .scale(yScale);
+svg.append("g")
+  .attr("class", "y-axis")
+  .attr("transform", "translate(" + p + ",0)")
+  .call(yAxis);
+
+//Draw line
+var line = d3.line()
+    .x(function(d){ return xScale(d.Date) ; })
+    .y(function(d){ return yScale(d.Close) ; });
+
+
+//Apend line
+    svg.append("path")
+      .datum(data)
+      .attr("class", "linex")
+      .attr("d", line)
+
+    //Add line at top of figure
+    svg.append("line")
+      .attr("class", "midline")
+      .attr("stroke", "black")
+      .attr("x1", p)
+      .attr("x2", w)
+      .attr("y1", yScale(d3.max(data, function(d) {
+        return d.Close;
+      })))
+      .attr("y2", yScale(d3.max(data, function(d) {
+        return d.Close;
+      })));
+});
+</script>
+</body>
+</html>

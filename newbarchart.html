@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	  <meta charset="UTF-8" />
+		<title>Interactive Bar Chart</title>
+    <link href="css/style.css" rel="stylesheet"/>
+    <script src="js/lodash.js"></script>
+</head>
+
+<body>
+    		  <header>
+    		  <!-- ADD YOUR NAME -->
+    		  <h1>Melissa Gutierrez: Exercise Portfolio</h1>
+    		  </header>
+
+    		  <div id="content">
+
+    		  <nav>
+    		  <ul>
+    		  <li><a href="index.html">Return to Main Page</a></li>
+</ul>
+</nav>
+    <main>
+      <img src="http://www.stickpng.com/assets/images/584d4c0e0a44bd1070d5d495.png" height="75">
+    <h2>MLB Spring Training Win Percentages</h2>
+
+    <p>The data below show the win percentages per team. Using the buttons, users can choose which league to visualize.</p>
+    <div id="buttons">
+    <input type="radio" name="league" value="Cactus" id="C" checked="checked"> Cactus League<br>
+    <input type="radio" name="league" value="Grapefruit" id="G"> Grapefruit League
+    </div>
+  </main>
+</div>
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script>
+    var w = 555;
+    var h = 175;
+
+    d3.csv("data/spring-training.csv").then(function(data) {
+      //bringing in spring training data
+
+      var sorteddata = _.sortBy(data, 'pct');
+      console.log(sorteddata);
+
+      var leagues = _.groupBy(sorteddata, 'league');
+      console.log(leagues);
+      data.forEach(function(d) {
+        d.pct = (+d.pct * 100).toFixed(1);
+      })
+
+
+      var svg = d3.select("main").append("svg")
+        .attr("width", w)
+        .attr("height", h);
+
+
+      var rectangles = svg.selectAll("rect")
+        .data(leagues.C)
+        .enter()
+        .append("rect")
+        .attr("x", function(d, i) {
+          return (i * 35);
+        })
+        .attr("y", function(d) {
+          return h - (d.pct * 2);
+        })
+        .attr("width", 30)
+        .attr("height", function(d) {
+          return (d.pct * 2);
+        })
+
+/*Use MLB Blue for fill*/
+      rectangles.attr("fill", "#002D72")
+        .style("opacity", .2)
+
+      var teams = svg.selectAll("text.team")
+        .data(leagues.C)
+        .enter()
+        .append("text")
+        .attr("class", "team")
+        .text(function(d) {
+          return d.abbr
+        })
+        .style("font-size", "9px");
+
+      teams.attr("x", function(d, i) {
+          return (i * 35);
+        })
+        .attr("y", function(d) {
+          return h - (d.pct * 2) - 5;
+        })
+
+
+      var pct = svg.selectAll("text.pct")
+        .data(leagues.C)
+        .enter()
+        .append("text")
+        .attr("class", "pct")
+        .text(function(d) {
+          return d.pct + "%"
+        })
+        .style("font-size", "10px");
+
+      pct.attr("x", function(d, i) {
+          return (i * 35);
+        })
+        .attr("y", function(d) {
+          return h - (d.pct * 2) + 10;
+        })
+
+      d3.select("#G")
+        .on("click", function() {
+          console.log("You clicked the G")
+
+          rectangles.data(leagues.G)
+            .transition()
+            .attr("y", function(d) {
+              return h - (d.pct * 2);
+            })
+            .attr("height", function(d) {
+              return (d.pct * 2);
+            })
+
+/*Use MLB Red for fill*/
+          rectangles.attr("fill", "#D50032")
+            .style("opacity", .2)
+
+          teams.data(leagues.G)
+            .transition()
+            .text(function(d) {
+              return d.abbr;
+            })
+            .attr("y", function(d) {
+              return h - (d.pct * 2) - 5;
+            })
+            .attr("height", function(d) {
+              return (d.pct * 2);
+            })
+
+        pct.data(leagues.G)
+            .transition()
+            .text(function(d) {
+              return d.pct + "%"
+            })
+            .attr("y", function(d) {
+              return h - (d.pct * 2) + 10;
+            })
+
+
+
+        });
+
+
+
+      d3.select("#C")
+        .on("click", function() {
+          rectangles.data(leagues.C)
+            .transition()
+            .attr("y", function(d) {
+              return h - (d.pct * 2);
+            })
+            .attr("height", function(d) {
+              return (d.pct * 2);
+            })
+          rectangles.attr("fill", "#002D72")
+            .style("opacity", .2)
+
+
+      teams.data(leagues.C)
+            .transition()
+            .text(function(d) {
+              return d.abbr;
+            })
+            .attr("y", function(d) {
+              return h - (d.pct * 2) - 5;
+            })
+            .attr("height", function(d) {
+              return (d.pct * 2);
+            })
+
+        pct.data(leagues.C)
+            .transition()
+            .text(function(d) {
+              return d.pct + "%"
+            })
+            .attr("y", function(d) {
+              return h - (d.pct * 2) + 10;
+            })
+        });
+    });
+    </script>
+  </body>
+</html>

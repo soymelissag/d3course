@@ -8,7 +8,9 @@ body {
   font:helvetica;
   line-height: 1.5;
 }
-
+img {
+  float: right;
+}
 a,
 a:visited {
   color: rgba(47,94,170);
@@ -48,6 +50,13 @@ nav {
   stroke-width: 1px;
     }
 
+/*Use "Story Time Blue" for Disney Line*/
+    .linex {
+      fill: none;
+      stroke: #006e99;
+      stroke-width: 2px;
+        }
+
 .linearea {
   fill: #346DF1;
   opacity:.1;
@@ -55,3 +64,20 @@ nav {
   stroke-width: 1px;
 
 }
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
+
+.focus {
+  font-size: 14px;
+}
+
+.focus circle {
+  fill: #5e8dc9;
+}
+
+    .focus text {
+        font-size: 14px;
+    }
