@@ -15,12 +15,17 @@
     </style>
   </head>
   <body>
+    <h1>  UNESCO World Heritage Sites </h1>
+     This map showcases the different countries and the number of UNESCO World Heritage Sites within its borders.
+
     <div class="map"></div>
     <script src="js/d3.min.js"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://d3js.org/d3-color.v1.min.js"></script>
     <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <link href="css/style.css" rel="stylesheet" />
+
     <script>
 
     var yellow = d3.interpolateYlGn(0), // "rgb(255, 255, 229)"
@@ -54,7 +59,7 @@
 
             var svg = d3.select(".map").append("svg");
 
-            var w = 900, h = 500;
+            var w = 800, h = 500;
 
             svg.attr("width", w)
                .attr("height", h);
