@@ -1,0 +1,62 @@
+html {
+  font-size: 16px;
+}
+
+body {
+  color: #222;
+  font-family: sans-serif;
+  line-height: 1.5;
+}
+
+a,
+a:visited {
+  color: rgba(47,94,170);
+}
+
+header {
+  background-color: #eee;
+  border-bottom: 1px solid #999;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+header h1 {
+  margin-left: 8px;
+}
+
+#content {
+  margin-top: 100px;
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  grid-column-gap: 20px;
+}
+
+nav {
+  border: 1px solid #999;
+}
+
+.midline {
+  stroke: dimgrey;
+  stroke-width: .5px;
+    }
+
+.line {
+  fill: none;
+  stroke: #FD8609;
+  stroke-width: 2px;
+    }
+
+.line2{
+  fill: none;
+  stroke: #031F7A;
+  stroke-width: 2px;
+}
+
+    .arealine {
+      fill: #346DF1;
+      opacity: .5;
+      stroke: #346DF1;
+      stroke-width: 2px;
+        }

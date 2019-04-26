@@ -52,9 +52,6 @@ var timeParser = d3.timeParse("%Y-%m-%d");
 data.forEach(function(d) {
   d.Date = timeParser(d.Date);
 
-  //Divides date for tooltip placement
-var bisectDate = d3.bisector(function(d) { return d.Date; }).left;
-
   d.Close = +d.Close;
   d.High = d.High;
   d.Low = d.Low;
@@ -97,6 +94,14 @@ var line = d3.line()
     .x(function(d){ return xScale(d.Date) ; })
     .y(function(d){ return yScale(d.Close) ; });
 
+//Use to set up tooltip
+var tooltip = d3.select("main")
+    .append("div")
+    .style("background", "white")
+    .style("padding", "10px")
+    .style("position", "absolute")
+    .style("font-size", "15px")
+    .style("visibility", "hidden");
 
 //Apend line
     svg.append("path")
@@ -104,17 +109,51 @@ var line = d3.line()
       .attr("class", "linex")
       .attr("d", line)
 
-    //Add line at top of figure
-    svg.append("line")
+//Use to place tooltip
+    svg.selectAll("dot.two")
+       .data(data)
+       .enter().append("circle")
+       .style("opacity", 0 )
+       .attr("r", 3)
+       .attr("cx", function(d) { return xScale(d.Date)  ; })
+       .attr("cy", function(d) { return yScale(d.Close); })
+       .on("mouseover", function(d){
+             console.log(d.Close)
+             return tooltip.style("visibility", "visible").html(
+             '<p>'+ "Close Price: "+ d.Close+ '</p>'
+               );
+              })
+             .on("mousemove", function(d){
+             return tooltip.style("top", (d3.event.pageY-20)+"px").style("left",(d3.event.pageX+20)+"px") .html(
+                 '<p>'+ "Close Price: "+ d.Close+ '</p>'
+              );
+           })
+             .on("mouseout", function(d){
+             return tooltip.style("visibility", "hidden");
+             });
+
+//Add line at top of figure
+  svg.append("line")
       .attr("class", "midline")
       .attr("stroke", "black")
       .attr("x1", p)
-      .attr("x2", w)
+      .attr("x2", w-p)
       .attr("y1", yScale(d3.max(data, function(d) {
         return d.Close;
       })))
       .attr("y2", yScale(d3.max(data, function(d) {
         return d.Close;
+
+
+
+
+
+
+
+  //mouseover
+
+
+
       })));
 });
 </script>
