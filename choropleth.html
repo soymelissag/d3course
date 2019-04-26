@@ -102,7 +102,43 @@
                })
                .attr("stroke", "#fff")
                .attr("stroke-width", "1px");
-        });
+
+        var color_array = [0, 9, 18, 27, 36, 45, 54]
+     var legend = svg.append("g");
+     legend.selectAll("rect")
+       .data(color_array)
+       .enter()
+       .append("rect")
+       .attr("x", function(d, i) {
+         return i * 20 + w / 2;
+       })
+       .attr("y", 20)
+       .attr("width", 20)
+       .attr("height", 15)
+       .style("fill", colors)
+     var max_val = d3.max(data, function(d) {
+       return +d.sites;
+     })
+     var min_val = d3.min(data, function(d) {
+       return +d.sites;
+     })
+     var interval = ((max_val) - (min_val)) / 5;
+     legend.selectAll("text")
+       .data(color_array)
+       .enter()
+       .append("text")
+       .attr("class", "leg_text")
+       .attr("font-size", "12px")
+       .attr("x", function(d, i) {
+         return i * 20 + w / 2;
+       })
+       .attr("y", 45)
+       .attr("dx", "0.3em")
+       .text(function(d, i) {
+         return color_array[i];
+       })
+     })
+
       });
     </script>
   </body>
