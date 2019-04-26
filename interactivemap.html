@@ -1,35 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-	<meta charset="UTF-8" />
-  <title>Interactive Map </title>
-  <link href="css/style.css" rel="stylesheet"/>
-  <script src="js/lodash.js"></script>
+   <head>
+  	<meta charset="UTF-8" />
+    <title>Interactive Map </title>
+    <link href="css/style.css" rel="stylesheet"/>
+    <script src="js/lodash.js"></script>
   <style>
     path {
-      fill: #fff6fc;
-      stroke: #000E68;
-    }
+      fill: #f8e8ec;
+      stroke: #44a6c6;}
   </style>
 </head>
 
 <body>
-    		  <header>
-    		  <!-- ADD YOUR NAME -->
-    		  <h1>Melissa Gutierrez: Exercise Portfolio</h1>
-    		  </header>
+    <header>
+    <!-- ADD YOUR NAME -->
+    <h1>Melissa Gutierrez: Exercise Portfolio</h1>
+    </header>
 
-    		  <div id="content">
+    <div id="content">
 
-    		  <nav>
-    		  <ul>
-    		  <li><a href="index.html">Return to Main Page</a></li>
-</ul>
-</nav>
+     <nav>
+     <ul>
+     <li><a href="index.html">Return to Main Page</a></li>
+     </ul>
+     </nav>
+
+
 <main>
-<h2>Interactive Map of Wonders</h2>
+<h2>Interactive Map of World Wonders</h2>
 
-<p>This interactive map represents the locations of the Seven Ancient and Modern Wonders of the world.</p>
+<p>This interactive map identifies the Seven Ancient and Modern Wonders of the world. </p>
+<p>Hover over each point to learn more!</p>
 
 </main>
 </div>
@@ -48,69 +50,75 @@ var svg = d3.select("main")
 .attr("width", w + p)
 .attr("height", h + p);
 
-
+//set up map projection
 var path = d3.geoPath()
 .projection(d3.geoMercator().scale(110).translate([w / 2, h / 1.2]));;
 
 d3.json("data/world.json").then(function(world) {
-// code to create map
+
+
+//create map
 svg.selectAll("path")
   .data(world.features)
   .enter()
   .append("path")
   .attr("d", path);
 
+//link data and join together
+d3.csv("data/seven-modern-wonders.csv").then(function(data) {
+  d3.csv("data/seven-ancient-wonders.csv").then(function(data2) {
 
-d3.csv("data/seven-ancient-wonders.csv").then(function(data) {
+  var together = _.union(data, data2);
+  console.log(together);
 
-  d3.csv("data/seven-modern-wonders.csv").then(function(data2) {
-
-    var together = _.union(data, data2);
-    console.log(together);
-
-    var tooltip = d3.select("main")
-      .append("div")
-      .style("background", "white")
-      .style("padding", "2px")
+//use code below to stylize tooltip as appears
+  var tooltip = d3.select("main")
+    .append("div")
+      .style("background", "#add8e6")
+      .style("border-radius", "8px")
+      .style("padding", "3px")
       .style("position", "absolute")
       .style("font-size", "12px")
-      .style("visibility", "hidden");
+      .style("visibility", "hidden")
+      .style('opacity', 0.9);
 
 
+//project map
 var projection = d3.geoMercator().scale(110).translate([w / 2, h / 1.2]);
 
+//add points based on lat/long
     var plots = svg.selectAll("circle")
-.data(together)
-.enter()
-.append("circle")
-.attr("r", 4)
-.attr("cx",function(d){
+  .data(together)
+  .enter()
+  .append("circle")
+  .attr("r", 5)
+  .attr("cx",function(d){
   return projection([+d.longitude,+d.latitude])[0];
 })
 .attr("cy",function(d){
   return projection([+d.longitude,+d.latitude])[1];
 })
+
+//stylize points
 .style('fill', 'rgb(75,75,100)')
         .attr('stroke','rgba(0,50,100,1)')
-        .attr('stroke-width', 0.5)
-        .attr('opacity', 0.9)
-.on("mouseover",function(d){
-//  d3.select(this).attr('opacity', 1)
-//console.log(d.wonder);
-return tooltip.style("visibility", "visible").html('<p>' + d.wonder + '<br>'+ "Constructed: " + d.constructed + '</p>');
-})
-.on("mousemove", function(d){
-return tooltip.style("top", (d3.event.pageY-20)+"px").style("left",(d3.event.pageX+20)+"px").html('<p>' + d.wonder + '<br>'+ "Constructed: " + d.constructed + '</p>');
-})
-.on("mouseout", function(d){
-return tooltip.style("visibility", "hidden");
-});
+        .attr('stroke-width', .5)
+        .attr('opacity', 0.8)
 
-})
-})
+
+     .on("mouseover",function(d){
+     return tooltip.style("visibility", "visible").html('<p>' + d.wonder + '<br>'+ "Constructed: " + d.constructed + '</p>');
+     })
+     .on("mousemove", function(d){
+     return tooltip.style("top", (d3.event.pageY-25)+"px").style("left",(d3.event.pageX+25)+"px").html('<p>' + d.wonder + '<br>'+ "Constructed: " + d.constructed + '</p>');
+     })
+     .on("mouseout", function(d){
+     return tooltip.style("visibility", "hidden");
+     });
+
+     })
+  })
 });
 </script>
-
 </body>
-
 </html>
