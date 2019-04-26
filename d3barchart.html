@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-
-		<meta charset="utf-8">
-		<title>   Exercise Portfolio </title>
-			<link href="css/style.css" rel="stylesheet" />
+    <meta charset="UTF-8" />
+		<title>   Bar Chart </title>
+		<link href="css/style.css" rel="stylesheet" />
 		</head>
+
 		<body>
 
 		  <header>
@@ -18,21 +18,17 @@
 		    <nav>
 		      <ul>
 		        <li><a href="index.html">Return to Main Page</a></li>
-		        <style>
 
-		  text {
-		        font-family: sans-serif;
-		        fill: black;
-		      }
-		    </style>
-		  </head>
-		</ul>
-		   </nav>
-		   <main>
-		</body>
-<body>
 
-		<title>d3 Bar Chart (NFL Players Touchdowns)</title>
+</ul>
+</nav>
+<main>
+  <h2> 2018 National Football League Attempts Statistics </h2>
+
+  <p> The number of attempts are shown on the graph below. The first initials above each bar corresponds to the player name and the second initials correspond to the position names. </p>
+</main>
+</div>
+
 		<style>
 			rect {
 				fill: pink;
@@ -45,18 +41,15 @@
 				fill: blue;
 			}
 		</style>
-	</head>
-	<body>
-
-		<h1> 2018 National Football League Touchdown Statistics </h1>
-		<t> The number of touchdowns are shown on the graph below. The first initials above each bar corresponds to the player name and the second initials correspond to the position names. </t>
 
 		<script src="js/d3.min.js"></script>
 		<script>
-			// Width and height!
-			var w = 1000;
-			var h = 100;
-			var p = 40
+
+
+			var w = 1600;
+			var h = 400;
+			var p = 80
+
 
 
 			// Importing the data! Here I am inserting the nfl rushing file. Buckle up, we in for a ride.
@@ -78,33 +71,31 @@
 
 
 					 var yScale = d3.scaleLinear()
-													.domain([0, d3.max(data, function(d) { return d.TD })])
-												 .range([ 0 ,100 ]);
 
 
 
 				//selecting the shape (rectangle) that the data will be bound to
 
-				svg.selectAll("rect")
+				var rectangles = svg.selectAll("rect")
 				   .data(data)
 					 .enter()
 					 .append("rect")
 
 
 				// for a rect you need: x, y, width and height. since i'm looking at
-				//touchdowns (td) on the y axis, i apply it to the height and y scale
+				//touchdowns (Att) on the y axis, i apply it to the height and y scale
 
 					 .attr("x", function(d, i) {
 					   return (i * 32);
 				   })
 				   .attr("y", function(d) {
-						 return h - d.TD;
+						 return h - d.Att ;
 					 })
 
 					 .attr("width", 30)
 					 .attr("height", function(d) {
 
-				   return yScale(d.TD);
+				   return yScale(d.Att);
 
 
 
@@ -146,7 +137,7 @@
 					  return (i * 32) + 2;
   				})
 				  .attr("y", function(d) {
-						return (h - d.TD) -2;
+						return (h - d.Att -4)
 					});
 			});
 		</script>
