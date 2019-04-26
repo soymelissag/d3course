@@ -8,6 +8,10 @@ body {
   font:helvetica;
   line-height: 1.5;
 }
+
+p {
+  text-align: center;
+}
 img {
   float: right;
 }
@@ -25,8 +29,15 @@ header {
   width: 100%;
 }
 
-header h1 {
+h1 {
   margin-left: 8px;
+  text-align: center;
+
+}
+    h2{
+  margin-left: 8px;
+  text-align: center;
+
 }
 
 #content {
